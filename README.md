@@ -1,148 +1,192 @@
+# TestandoAws
 
-**Stack:** Node.js API (`api/`), React Vite client (`client/`), Postgres (local)
+Aplicação full stack para gestão de tarefas operacionais com:
+- API Node.js + Express + PostgreSQL
+- Frontend React + Vite + TypeScript
+- Execução local via Docker Compose
+- Estrutura de scripts para AWS/EC2 e publicação em S3
 
-## Estrutura
+## Arquitetura
 
-```
+- `api/`: backend REST (Express + `pg`)
+- `client/`: frontend React (Vite, Tailwind, React Query, React Hook Form)
+- `docker-compose.yml`: orquestra `db`, `backend` e `frontend`
+- `infra/`: scripts auxiliares para AWS (alguns ainda em construção)
+- `scripts/`: automações locais (ex.: sync para S3)
+
+## Funcionalidades atuais
+
+- Login mock no frontend (persistido em `localStorage`)
+- Rotas protegidas (`/login` e dashboard)
+- Dashboard com:
+  - health da API
+  - health do banco
+  - informações de runtime
+  - CRUD de tarefas
+  - filtro, paginação e status
+- Campo opcional de prazo (`dueDate`) ao criar tarefa
+
+## Estrutura do projeto
+
+```text
 .
-├─ api/
-│  ├─ Dockerfile
-│  ├─ .env.example
-│  └─ src/
-├─ client/
-│  ├─ Dockerfile
-│  ├─ nginx.conf
-│  ├─ docker-entrypoint.sh
-│  ├─ .env.example
-│  └─ src/
-├─ docker-compose.yml
-├─ db.env.example
-└─ README.md
+├── api/
+│   ├── src/
+│   │   ├── server.js
+│   │   └── db.js
+│   ├── .env.example
+│   └── Dockerfile
+├── client/
+│   ├── src/
+│   ├── public/config.js
+│   ├── .env.example
+│   ├── nginx.conf
+│   ├── docker-entrypoint.sh
+│   └── Dockerfile
+├── infra/
+│   ├── ec2/
+│   ├── env/
+│   └── docs/
+├── scripts/
+│   ├── s3.sh
+│   └── build_react.sh
+├── db.env.example
+└── docker-compose.yml
 ```
 
-## Rodar local
+## Subir local com Docker
 
-1. Copie os exemplos de env:
+1. Copie os arquivos de ambiente:
 
-```
+```bash
 cp api/.env.example api/.env
 cp client/.env.example client/.env
 cp db.env.example db.env
 ```
 
-2. Suba os containers:
+2. Suba os serviços:
 
-```
+```bash
 docker compose up --build
 ```
 
-3. Acesso:
+3. Acesse:
 
 - Frontend: `http://localhost:8080`
-- Backend: `http://localhost:3002`
+- Backend (direto): `http://localhost:3002`
 
-## Build das imagens
+## Rodar em modo desenvolvimento (sem Docker)
 
+Pré-requisitos:
+- Node.js 22+
+- PostgreSQL ativo
+
+Backend:
+
+```bash
+cd api
+npm install
+npm start
 ```
-docker build -t meuapp-backend ./api
-docker build -t meuapp-frontend ./client
+
+Frontend:
+
+```bash
+cd client
+npm install
+npm run dev
 ```
 
-## Configuração de env
+## Variáveis de ambiente
 
 ### Backend (`api/.env`)
 
-- `PORT=3002`
-- `DB_HOST=db`
-- `DB_PORT=5432`
-- `DB_USER=postgres`
-- `DB_PASSWORD=postgres`
-- `DB_NAME=appdb`
-- `DB_SSL=false`
-- `APP_VERSION=local`
-- `CORS_ORIGIN=http://localhost:8080`
+```env
+PORT=3002
+DB_HOST=db
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=appdb
+DB_SSL=false
+APP_VERSION=local
+CORS_ORIGIN=http://localhost:8080
+```
 
 ### Frontend (`client/.env`)
 
-- `API_URL=`
-  - Use vazio para **same-origin** com proxy do Nginx (`/api` → backend).
+```env
+API_URL=
+```
 
-### Postgres (`db.env`)
+Com `API_URL` vazio, o frontend usa `/api` (same-origin).
 
-- `POSTGRES_USER=postgres`
-- `POSTGRES_PASSWORD=postgres`
-- `POSTGRES_DB=appdb`
+### Banco (`db.env`)
 
-## Healthcheck e endpoints
+```env
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=appdb
+```
 
-- API health: `GET /health`
-- Compat: `GET /api/health`
-- DB health: `GET /api/db-health`
-- Info: `GET /api/info`
-- Tasks: `GET /api/tasks`
+## Endpoints da API
+
+- `GET /health`
+- `GET /api/health`
+- `GET /api/db-health`
+- `GET /api/info`
+- `GET /api/tasks`
+- `POST /api/tasks`
+- `PATCH /api/tasks/:id`
+- `DELETE /api/tasks/:id`
 
 Exemplos:
 
-```
+```bash
 curl http://localhost:3002/health
 curl http://localhost:3002/api/tasks
 ```
 
-## Runtime config do Frontend
+Payload de criação:
 
-O `client` lê `window.__CONFIG__.API_URL` de `/config.js`, gerado no **start** do container. Nunca usamos `VITE_API_URL` no build.
+```json
+{
+  "title": "Ajustar health check",
+  "dueDate": "2026-03-10"
+}
+```
 
-## Due date em tarefas
+## Build de imagens
 
-As tarefas agora aceitam `dueDate` opcional no `POST /api/tasks` (formato `YYYY-MM-DD`); o backend persiste em `tasks.due_date` (`DATE`) com migração automática via `ALTER TABLE ... ADD COLUMN IF NOT EXISTS ...` no boot. No frontend, o formulário de criação inclui campo de data e a lista exibe a coluna "Data" (ou `—` quando vazia).
+```bash
+docker build -t meuapp-backend ./api
+docker build -t meuapp-frontend ./client
+```
 
-## AWS (ECS Fargate ou ECS EC2)
+## Frontend runtime config
 
-### Imagens separadas
+No container Nginx, o arquivo `/config.js` é gerado no startup por `client/docker-entrypoint.sh` usando `API_URL`.
 
-- `meuapp-backend` e `meuapp-frontend` com Dockerfiles próprios.
+## Infra e scripts auxiliares
 
-### Exemplo de env vars para Task Definition
+### `scripts/s3.sh`
 
-**Backend:**
-- `PORT=3002`
-- `DB_HOST=<rds-endpoint>`
-- `DB_PORT=5432`
-- `DB_USER=<user>`
-- `DB_PASSWORD=<secret>`
-- `DB_NAME=<db>`
-- `DB_SSL=true`
-- `APP_VERSION=<git-sha>`
-- `CORS_ORIGIN=https://app.seudominio.com`
+Sincroniza `client/dist` para um bucket S3:
 
-**Frontend:**
-- `API_URL=` (vazio para same-origin com ALB)
+```bash
+S3_BUCKET=meu-bucket ./scripts/s3.sh
+# opcional: AWS_PROFILE=meu-perfil
+```
 
-### Security Groups (recomendado)
+### `infra/ec2/`
 
-- **ALB SG**: inbound `80/443` de `0.0.0.0/0`.
-- **Frontend SG (ECS)**: inbound `80` **somente** do SG do ALB.
-- **Backend SG (ECS)**: inbound `3002` **somente** do SG do ALB.
-- **DB SG**: inbound `5432` **somente** do SG do backend.
+- `criar_sg.sh`: cria Security Group com opção de regra de entrada
+- `criar_sg_alb.sh`: cria SG para ALB e libera 80/443
+- `criar_ec2.sh`, `user_data_amzlinux.sh`, `user_data_app.sh`: ainda em construção
 
-### ALB routing (path-based)
+Arquivo base de variáveis: `infra/env/infra.env.exemplo`.
 
-- `/api/*` → target group **backend** (porta 3002)
-- `/` → target group **frontend** (porta 80)
+## Observações
 
-### Observações
-
-- Prefira secrets no AWS Secrets Manager/SSM Parameter Store.
-- Logs do Node já estão em JSON (pronto para CloudWatch).
-- Healthcheck do backend em `/health`.
-
-## Checklist pré-deploy AWS
-
-- [ ] Atualizar `APP_VERSION` com hash/versão do build
-- [ ] Validar `CORS_ORIGIN` apenas com origens confiáveis
-- [ ] Confirmar `API_URL` vazio (same-origin) para usar ALB `/api`
-- [ ] Configurar SGs conforme recomendado
-- [ ] Validar healthchecks no Target Group
-- [ ] Confirmar `DB_SSL=true` para RDS
-- [ ] Garantir secrets fora do repositório
-- [ ] Testar build e push das imagens no CI
+- `client/dist/` e `client/node_modules/` aparecem no workspace atual; não devem ser versionados.
+- `infra/docs/infra.md` ainda está como placeholder.

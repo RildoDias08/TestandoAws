@@ -6,3 +6,11 @@
 .env.*
 !db.env.example
 !**/.env.example
+
+# dependencies
+node_modules/
+**/node_modules/
+
+# build artifacts
+dist/
+**/dist/
