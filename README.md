@@ -1,6 +1,4 @@
 
-<<<<<<< HEAD
-=======
 **Stack:** Node.js API (`api/`), React Vite client (`client/`), Postgres (local)
 
 ## Estrutura
@@ -148,4 +146,3 @@ As tarefas agora aceitam `dueDate` opcional no `POST /api/tasks` (formato `YYYY-
 - [ ] Confirmar `DB_SSL=true` para RDS
 - [ ] Garantir secrets fora do repositório
 - [ ] Testar build e push das imagens no CI
->>>>>>> 5910375 (Subindo App para o git)
