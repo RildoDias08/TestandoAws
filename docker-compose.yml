@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16-alpine
+    env_file:
+      - ./db.env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend_net
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U postgres -d appdb"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+
+  backend:
+    build:
+      context: ./api
+    env_file:
+      - ./api/.env
+    depends_on:
+      db:
+         condition: service_started
+    networks:
+      - backend_net
+#    healthcheck:
+#      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3002/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+
+  frontend:
+    build:
+      context: ./client
+    env_file:
+      - ./client/.env
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "8080:80"
+    networks:
+      - frontend_net
+      - backend_net
+
+networks:
+  frontend_net:
+  backend_net:
+
+volumes:
+  db_data:
