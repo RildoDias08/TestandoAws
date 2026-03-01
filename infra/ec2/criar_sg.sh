@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ===== Defaults =====
-AWS_REGION="${AWS_REGION:-}"
-VPC_ID="${VPC_ID:-}"
+# ====== Carregar env ======
+ENV_FILE="${ENV_FILE:-../env/infra.env}"
+if [[ ! -f "$ENV_FILE" ]]; then
+  echo "❌ Não encontrei $ENV_FILE"
+  echo "Crie a partir do exemplo: infra/env/infra.env.example"
+  exit 1
+fi
+# shellcheck disable=SC1090
+source "$ENV_FILE"
+
+AWS_REGION="$AWS_REGION"
+VPC_ID="$VPC_ID"
 
 [[ -z "$AWS_REGION" ]] && read -rp "Região AWS (ex: us-east-1): " AWS_REGION
 [[ -z "$VPC_ID" ]] && read -rp "VPC ID (ex: vpc-xxxx): " VPC_ID
@@ -22,7 +31,6 @@ SG_ID=$(aws ec2 create-security-group \
   --query 'GroupId' \
   --output text)
 
-echo
 read -rp "Deseja adicionar regra de entrada? (y/n): " ADD_RULE
 
 if [[ "$ADD_RULE" == "y" ]]; then
@@ -39,6 +47,7 @@ if [[ "$ADD_RULE" == "y" ]]; then
 
   echo "Regra adicionada."
 fi
+
 
 echo
 echo "SG Criado: $SG_ID"
