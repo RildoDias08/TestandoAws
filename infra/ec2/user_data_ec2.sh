@@ -30,7 +30,6 @@ grep -q swapfile /etc/fstab || echo "/swapfile swap swap defaults 0 0" >> /etc/f
 
 # Deploy
 cd /home/ec2-user
-rm -rf TestandoAws
 
 # Clone enxuto (sparse)
 git clone --filter=blob:none --no-checkout https://github.com/RildoDias08/TestandoAws.git
@@ -43,5 +42,4 @@ git checkout main
 # Arquivos de ambiente
 cp -n api/.env.example api/.env
 cp -n db.env.example db.env
-# IMPORTANTE: garanta que o compose expõe 3002:3002 e não sobe frontend
 
