@@ -110,7 +110,7 @@ export function TasksTable({ tasks, isLoading, isError, onCreateClick, onToggleT
                 {pagedTasks.map((task) => (
                   <TableRow key={task.id}>
                     <TableCell className="font-medium">{task.title}</TableCell>
-                    <TableCell>{task.due_date ?? "-"}</TableCell>
+                    <TableCell>{task.due_date? new Date(task.due_date).toLocaleDateString("pt-BR") : "-"}</TableCell>
                     <TableCell>
                       {task.done ? <Badge variant="success">Concluído</Badge> : <Badge variant="warning">Pendente</Badge>}
                     </TableCell>
