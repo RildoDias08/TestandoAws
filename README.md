@@ -1,6 +1,6 @@
 🚀 TestandoAws
 
-Aplicação full stack de gestão de tarefas construída para prática real de deploy na AWS usando CLI first approach.
+Aplicação full stack de gestão de tarefas construída(via gpt) para prática real de deploy na AWS usando CLI first approach.
 
 O projeto demonstra um fluxo moderno de engenharia:
 
@@ -15,7 +15,7 @@ O projeto demonstra um fluxo moderno de engenharia:
 Local
 ```mermaid
 flowchart LR
-    👤 Usuário --> FE[Frontend (localhost:8080)]
+    Usuário --> FE[Frontend (localhost:8080)]
     FE -->|/api/* (proxy)| BE[Backend API :3002]
     BE --> DB[(PostgreSQL)]
 
