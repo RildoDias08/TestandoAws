@@ -15,9 +15,10 @@ O projeto demonstra um fluxo moderno de engenharia:
 
 ```mermaid
 flowchart LR
-    User[👤 Usuário] --> Frontend
-    Frontend --> Backend
-    Backend --> PostgreSQL
+    User[👤 Usuário] --> S3[Frontend (S3)]
+    User --> ALB[Application Load Balancer]
+    ALB --> ECS[ECS Fargate]
+    ECS --> RDS[(PostgreSQL RDS)]
 
 ```
 ## 📁 Estrutura do Projeto
@@ -250,7 +251,6 @@ Sync para S3
 
 🚧 Roadmap
 
-- [ ] ALB + HTTPS (ACM)
 - [ ] CloudFront
 - [ ] CI/CD pipeline
 - [ ] Terraform/IaC
