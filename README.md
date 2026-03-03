@@ -16,7 +16,7 @@ Local
 ```mermaid
 flowchart LR
     Usuário --> Frontend[localhost:8080]
-    FRONT --> BACKEND[|/api/* (proxy)| API :3002]
+    FRONT --> BACKEND[API:3002]
     BACKEND --> DB[PostgreSQL]
 
 ```
