@@ -12,17 +12,20 @@ O projeto demonstra um fluxo moderno de engenharia:
 
 ---
 
-🧱 Arquitetura da Aplicação
+```md
+## 🧱 Arquitetura da Aplicação
 
+```mermaid
 flowchart LR
-    User --> Frontend
+    User[👤 Usuário] --> Frontend
     Frontend --> Backend
     Backend --> PostgreSQL
-
+```
 ---
 
-📁 Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
+```bash
 TestandoAws/
 │
 ├── api/                    # Backend Node.js + Express
@@ -37,7 +40,6 @@ TestandoAws/
 │   └── .env.example
 │
 ├── infra/                  # Automação AWS via CLI
-│   │
 │   ├── ecs/                # Scripts ECS/Fargate
 │   ├── ecr/                # Scripts ECR
 │   ├── ec2/                # Scripts EC2
@@ -51,7 +53,7 @@ TestandoAws/
 │
 ├── docker-compose.yml      # Ambiente local completo
 ├── db.env.example
-└── README.md
+└── README.md```
 
 ---
 
