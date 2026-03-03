@@ -19,7 +19,8 @@ O projeto demonstra um fluxo moderno de engenharia:
 flowchart LR
     User[👤 Usuário] --> Frontend
     Frontend --> Backend
-    Backend --> PostgreSQL```
+    Backend --> PostgreSQL
+
 ---
 
 ## 📁 Estrutura do Projeto
@@ -52,7 +53,7 @@ TestandoAws/
 │
 ├── docker-compose.yml      # Ambiente local completo
 ├── db.env.example
-└── README.md```
+└── README.md
 
 ---
 
