@@ -119,11 +119,12 @@ npm run dev
 
 🧠 Decisões de Arquitetura
 
-- Frontend e backend desacoplados
+- Frontend(S3) e backend(ECS) desacoplados
 - Fargate para execução serverless de containers
-- Logs via CloudWatch
+- Alta disponibilidade 
 - Segurança por Security Groups restritivos
 - Infraestrutura reproduzível via CLI
+- Logs via Cloudwatch
 
 ---
 
