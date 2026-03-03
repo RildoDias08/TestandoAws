@@ -16,7 +16,7 @@ Local
 ```mermaid
 flowchart LR
     Usuario["Usuário"] --> Frontend["Frontend (localhost:8080)"]
-    Frontend -->|/api/* (proxy)| Backend["API :3002"]
+    Frontend -->|/api/ (proxy)| Backend["API :3002"]
     Backend --> DB[(PostgreSQL)]
 ```
 
