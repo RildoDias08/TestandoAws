@@ -10,8 +10,6 @@ O projeto demonstra um fluxo moderno de engenharia:
 - Execução local via Docker Compose
 - Infraestrutura scriptada (laboratório DevOps)
 
----
-
 
 ## 🧱 Arquitetura da Aplicação
 
@@ -21,7 +19,6 @@ flowchart LR
     Frontend --> Backend
     Backend --> PostgreSQL
 
----
 
 ## 📁 Estrutura do Projeto
 
@@ -55,7 +52,7 @@ TestandoAws/
 ├── db.env.example
 └── README.md
 
----
+
 
 ✨ Funcionalidades
 
