@@ -19,8 +19,7 @@ O projeto demonstra um fluxo moderno de engenharia:
 flowchart LR
     User[👤 Usuário] --> Frontend
     Frontend --> Backend
-    Backend --> PostgreSQL
-```
+    Backend --> PostgreSQL```
 ---
 
 ## 📁 Estrutura do Projeto
