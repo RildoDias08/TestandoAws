@@ -15,8 +15,8 @@ O projeto demonstra um fluxo moderno de engenharia:
 Local
 ```mermaid
 flowchart LR
-    Usuário --> FRONTEND[localhost:8080]
-    FRONTEND --> BACKEND[API:3002]
+    Usuário --> FRONTEND[Frontend(localhost:8080)]
+    FRONTEND --> BACKEND[Backend(API:3002)]
     BACKEND --> DB[PostgreSQL]
 
 ```
