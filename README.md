@@ -1,107 +1,118 @@
-# TestandoAws
+🚀 TestandoAws
 
-Aplicação full stack para gestão de tarefas operacionais com:
-- API Node.js + Express + PostgreSQL
-- Frontend React + Vite + TypeScript
+Aplicação full stack de gestão de tarefas construída para prática real de deploy na AWS usando CLI first approach.
+
+O projeto demonstra um fluxo moderno de engenharia:
+
+- Frontend e Backend separados
+- Containerização com Docker
+- Deploy automatizado na AWS
 - Execução local via Docker Compose
-- Estrutura de scripts para AWS/EC2 e publicação em S3
+- Infraestrutura scriptada (laboratório DevOps)
 
-## Arquitetura
+---
 
-- `api/`: backend REST (Express + `pg`)
-- `client/`: frontend React (Vite, Tailwind, React Query, React Hook Form)
-- `docker-compose.yml`: orquestra `db`, `backend` e `frontend`
-- `infra/`: scripts auxiliares para AWS (alguns ainda em construção)
-- `scripts/`: automações locais (ex.: sync para S3)
+🧱 Arquitetura da Aplicação
 
-## Funcionalidades atuais
+flowchart LR
+    User --> Frontend
+    Frontend --> Backend
+    Backend --> PostgreSQL
 
-- Login mock no frontend (persistido em `localStorage`)
-- Rotas protegidas (`/login` e dashboard)
-- Dashboard com:
-  - health da API
-  - health do banco
-  - informações de runtime
-  - CRUD de tarefas
-  - filtro, paginação e status
-- Campo opcional de prazo (`dueDate`) ao criar tarefa
+---
 
-## Estrutura do projeto
+📁 Estrutura do Projeto
 
-```text
-.
-├── api/
+TestandoAws/
+│
+├── api/                    # Backend Node.js + Express
 │   ├── src/
-│   │   ├── server.js
-│   │   └── db.js
-│   ├── .env.example
-│   └── Dockerfile
-├── client/
+│   ├── Dockerfile
+│   └── .env.example
+│
+├── client/                 # Frontend React + Vite + TS
 │   ├── src/
-│   ├── public/config.js
-│   ├── .env.example
-│   ├── nginx.conf
-│   ├── docker-entrypoint.sh
-│   └── Dockerfile
-├── infra/
-│   ├── ec2/
-│   ├── env/
+│   ├── public/
+│   ├── Dockerfile
+│   └── .env.example
+│
+├── infra/                  # Automação AWS via CLI
+│   │
+│   ├── ecs/                # Scripts ECS/Fargate
+│   ├── ecr/                # Scripts ECR
+│   ├── ec2/                # Scripts EC2
+│   ├── rds/                # Script criação RDS
+│   ├── env/                # Variáveis de infra
 │   └── docs/
-├── scripts/
-│   ├── s3.sh
-│   └── build_react.sh
+│
+├── scripts/                # Scripts utilitários
+│   ├── react.sh
+│   └── s3.sh
+│
+├── docker-compose.yml      # Ambiente local completo
 ├── db.env.example
-└── docker-compose.yml
-```
+└── README.md
 
-## Subir local com Docker
+---
 
-1. Copie os arquivos de ambiente:
+✨ Funcionalidades
 
-```bash
+🔐 Autenticação (mock)
+
+- Login persistido em "localStorage"
+- Rotas protegidas
+- Logout
+
+📊 Dashboard
+
+- Health da API
+- Health do banco
+- Informações de runtime
+- CRUD completo de tarefas
+- Paginação e filtros
+- Campo opcional "dueDate"
+
+---
+
+🐳 Execução Local (Docker)
+
+1️⃣ Preparar variáveis
+
 cp api/.env.example api/.env
 cp client/.env.example client/.env
 cp db.env.example db.env
-```
 
-2. Suba os serviços:
+2️⃣ Subir containers
 
-```bash
 docker compose up --build
-```
 
-3. Acesse:
+3️⃣ Acessar
 
-- Frontend: `http://localhost:8080`
-- Backend (direto): `http://localhost:3002`
+- Frontend → http://localhost:8080
+- Backend → http://localhost:3002
 
-## Rodar em modo desenvolvimento (sem Docker)
+---
 
-Pré-requisitos:
-- Node.js 22+
-- PostgreSQL ativo
+🧪 Execução em modo dev (sem Docker)
 
-Backend:
+Backend
 
-```bash
 cd api
 npm install
 npm start
-```
 
-Frontend:
+Frontend
 
-```bash
 cd client
 npm install
 npm run dev
-```
 
-## Variáveis de ambiente
+---
 
-### Backend (`api/.env`)
+🔧 Variáveis de Ambiente
 
-```env
+Backend ("api/.env")
+
 PORT=3002
 DB_HOST=db
 DB_PORT=5432
@@ -111,82 +122,149 @@ DB_NAME=appdb
 DB_SSL=false
 APP_VERSION=local
 CORS_ORIGIN=http://localhost:8080
-```
 
-### Frontend (`client/.env`)
+---
 
-```env
+Frontend ("client/.env")
+
 API_URL=
-```
 
-Com `API_URL` vazio, o frontend usa `/api` (same-origin).
+👉 Se vazio, usa "/api" (same-origin)
 
-### Banco (`db.env`)
+---
 
-```env
+Banco ("db.env")
+
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=appdb
-```
 
-## Endpoints da API
+---
 
-- `GET /health`
-- `GET /api/health`
-- `GET /api/db-health`
-- `GET /api/info`
-- `GET /api/tasks`
-- `POST /api/tasks`
-- `PATCH /api/tasks/:id`
-- `DELETE /api/tasks/:id`
+🌐 Endpoints da API
 
-Exemplos:
+Health
 
-```bash
-curl http://localhost:3002/health
-curl http://localhost:3002/api/tasks
-```
+GET /health
+GET /api/health
+GET /api/db-health
+GET /api/info
 
-Payload de criação:
+Tasks
 
-```json
+GET    /api/tasks
+POST   /api/tasks
+PATCH  /api/tasks/:id
+DELETE /api/tasks/:id
+
+Exemplo de criação
+
 {
   "title": "Ajustar health check",
   "dueDate": "2026-03-10"
 }
-```
 
-## Build de imagens
+---
 
-```bash
-docker build -t meuapp-backend ./api
-docker build -t meuapp-frontend ./client
-```
+☁️ Infraestrutura AWS (CLI)
 
-## Frontend runtime config
+A pasta "infra/" contém scripts para provisionamento.
 
-No container Nginx, o arquivo `/config.js` é gerado no startup por `client/docker-entrypoint.sh` usando `API_URL`.
+---
 
-## Infra e scripts auxiliares
+🔹 ECR
 
-### `scripts/s3.sh`
+Criar repositório:
 
-Sincroniza `client/dist` para um bucket S3:
+cd infra/ecr
+./criar_ecr.sh
 
-```bash
-S3_BUCKET=meu-bucket ./scripts/s3.sh
-# opcional: AWS_PROFILE=meu-perfil
-```
+Build e push:
 
-### `infra/ec2/`
+cd api
+../infra/ecr/build_ecr.sh
 
-- `criar_sg.sh`: cria Security Group com opção de regra de entrada
-- `criar_sg_alb.sh`: cria SG para ALB e libera 80/443
-- `criar_ec2.sh`, `user_data_amzlinux.sh`, `user_data_app.sh`: ainda em construção
+---
 
-Arquivo base de variáveis: `infra/env/infra.env.exemplo`.
+🔹 ECS Fargate
 
-## Observações
+Fluxo recomendado:
 
-- `client/dist/` e `client/node_modules/` aparecem no workspace atual; não devem ser versionados.
-- `infra/docs/infra.md` ainda está como placeholder.
+cd infra/ecs
+
+./req_fargate.sh
+./criar_taskdef.sh
+./criar_service.sh
+
+Para novo deploy:
+
+./updt_service.sh
+
+---
+
+🔹 RDS PostgreSQL
+
+cd infra/rds
+./criar_rds.sh
+
+---
+
+🔹 EC2 (opcional)
+
+Scripts auxiliares em:
+
+infra/ec2/
+
+Inclui:
+
+- criação de instância
+- security groups
+- user data bootstrap
+
+---
+
+📦 Scripts Utilitários
+
+Build do React
+
+./scripts/react.sh
+
+---
+
+Sync para S3
+
+./scripts/s3.sh
+
+⚠️ Ajustar bucket/profile antes de usar.
+
+---
+
+🧠 Decisões de Arquitetura
+
+- Frontend e backend desacoplados
+- Fargate para execução serverless de containers
+- Logs via CloudWatch
+- Segurança por Security Groups restritivos
+- Infraestrutura reproduzível via CLI
+
+---
+
+🚧 Roadmap
+
+- [ ] ALB + HTTPS (ACM)
+- [ ] CloudFront
+- [ ] CI/CD pipeline
+- [ ] Terraform/IaC
+- [ ] Observabilidade avançada
+
+---
+
+👨‍💻 Autor
+
+Rildo Dias
+
+Projeto criado com foco em evolução para nível Cloud / DevOps Engineer.
+
+---
+
+⭐ Se este projeto te ajudou, considere dar uma estrela!
