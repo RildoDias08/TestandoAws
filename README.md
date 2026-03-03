@@ -12,7 +12,7 @@ O projeto demonstra um fluxo moderno de engenharia:
 
 ---
 
-```md
+
 ## 🧱 Arquitetura da Aplicação
 
 ```mermaid
