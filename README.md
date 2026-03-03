@@ -12,9 +12,15 @@ O projeto demonstra um fluxo moderno de engenharia:
 
 
 ## 🧱 Arquitetura da Aplicação
-
 Local
 ```mermaid
+flowchart LR
+    U[👤 Usuário] --> FE[Frontend (localhost:8080)]
+    FE -->|/api/* (proxy)| BE[Backend API :3002]
+    BE --> DB[(PostgreSQL)]
+
+
+Local
 flowchart LR
   Usuário --> Front [(localhost:8080)]
   Front --> |/api/* (proxy)| Back[Backend API :3002]
