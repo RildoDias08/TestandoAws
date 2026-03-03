@@ -15,7 +15,7 @@ O projeto demonstra um fluxo moderno de engenharia:
 
 ```mermaid
 flowchart LR
-    User --> S3[Frontend (S3)]
+    User --> S3[Frontend]
     User --> ALB[Application Load Balancer]
     ALB --> ECS[ECS Fargate]
     ECS --> RDS[PostgreSQL]
