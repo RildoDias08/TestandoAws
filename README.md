@@ -19,7 +19,7 @@ flowchart LR
     Frontend --> Backend
     Backend --> PostgreSQL
 
-
+```
 ## 📁 Estrutura do Projeto
 
 ```bash
@@ -52,7 +52,7 @@ TestandoAws/
 ├── db.env.example
 └── README.md
 
-
+```
 
 ✨ Funcionalidades
 
