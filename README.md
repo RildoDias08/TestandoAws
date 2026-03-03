@@ -26,7 +26,7 @@ flowchart LR
     Usuário --> S3[Frontend]
     S3 --> ALB[Application Load Balancer]
     ALB --> ECS[ECS Fargate]
-    ECS --> RDS["RDS" (PostgreSQL)]
+    ECS --> RDS["RDS"(PostgreSQL)]
 
 ```
 ## 📁 Estrutura do Projeto
