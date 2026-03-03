@@ -12,19 +12,19 @@ O projeto demonstra um fluxo moderno de engenharia:
 
 
 ## 🧱 Arquitetura da Aplicação
+
+Local
 ```mermaid
 flowchart LR
-LOCAL
-  Usuário --> Front [localhost:8080]
-  Front -->|/api/* (proxy)| Back[Backend API :3002]
+  Usuário --> Front [(localhost:8080)]
+  Front --> |/api/* (proxy)| Back[Backend API :3002]
   Back --> DB[(PostgreSQL)]
 
 ```
-
+AWS
 ```mermaid
 flowchart LR
-AWS
-    User --> S3[Frontend]
+    Usuário --> S3[Frontend]
     S3 --> ALB[Application Load Balancer]
     ALB --> ECS[ECS Fargate]
     ECS --> RDS[PostgreSQL]
