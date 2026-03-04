@@ -24,7 +24,7 @@ flowchart LR
 AWS
 ```mermaid
 flowchart LR
-    Usuário --> S3[Frontend]
+    Usuário --> S3["Frontend(S3)"]
     S3 --> ALB[Application Load Balancer]
     ALB --> ECS[ECS Fargate]
     ECS --> RDS[(RDS PostgreSQL)]
