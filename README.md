@@ -145,4 +145,3 @@ npm run dev
 Rildo Dias
 
 Projeto criado com foco em evolução para Cloud/DevOps Engineer.
-d0ab7cd (readme att)
