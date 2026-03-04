@@ -102,7 +102,6 @@ docker compose up --build
 3️⃣ Acessar
 
 - Frontend → http://localhost:8080
-- Backend → http://localhost:3002
 
 ---
 
@@ -127,7 +126,6 @@ npm run dev
 - Frontend(S3) e backend(ECS) desacoplados
 - Fargate para execução serverless de containers
 - Alta disponibilidade 
-- Segurança por Security Groups restritivos
 - Infraestrutura reproduzível via CLI
 - Logs via Cloudwatch
 
@@ -147,3 +145,4 @@ npm run dev
 Rildo Dias
 
 Projeto criado com foco em evolução para Cloud/DevOps Engineer.
+d0ab7cd (readme att)
