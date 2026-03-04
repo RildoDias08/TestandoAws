@@ -9,7 +9,8 @@ O projeto demonstra um fluxo moderno de engenharia:
 - Deploy automatizado na AWS
 - Execução local via Docker Compose
 - Infraestrutura scriptada (laboratório DevOps)
-
+  
+---
 
 ## 🧱 Arquitetura da Aplicação
 Local
@@ -29,6 +30,8 @@ flowchart LR
     ECS --> RDS[(RDS PostgreSQL)]
 
 ```
+---
+
 ## 📁 Estrutura do Projeto
 
 ```bash
@@ -62,6 +65,8 @@ TestandoAws/
 └── README.md
 
 ```
+
+---
 
 ✨ Funcionalidades
 
@@ -141,8 +146,4 @@ npm run dev
 
 Rildo Dias
 
-Projeto criado com foco em evolução para nível Cloud / DevOps Engineer.
-
----
-
-⭐ Se este projeto te ajudou, considere dar uma estrela!
+Projeto criado com foco em evolução para Cloud/DevOps Engineer.
