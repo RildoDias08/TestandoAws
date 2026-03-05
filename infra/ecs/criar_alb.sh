@@ -11,15 +11,14 @@ AWS_REGION="${AWS_REGION:-$(aws configure get region)}"
 : "${ALB_SUBNET_IDS:?ALB_SUBNET_IDS não definido no infra.env}"
 : "${CERT_ARN:?CERT_ARN não definido no infra.env}"
 
-ALB_NAME="${ALB_NAME:-rio-back-alb}"
-TG_NAME="${TG_NAME:-rio-back-tg}"
-ALB_SG_NAME="${ALB_SG_NAME:-rio-alb-sg}"
+read -rp "Nome do ALB:" ALB_NAME
+read -rp "Nome do Target Group (ex: meuapp-tg): " TG_NAME
+read -rp "Nome do SG do ALB (ex: meuapp-sgalb): " ALB_SG_NAME
 
 APP_PORT="${APP_PORT:-3002}"
 HEALTH_PATH="${HEALTH_PATH:-/}"
 HEALTH_CODES="${HEALTH_CODES:-200-399}"
 
-SUBNETS_CSV="$(echo "$ALB_SUBNET_IDS" | xargs | sed 's/ /,/g')"
 
 echo "==> Região:       $AWS_REGION"
 echo "==> VPC:          $VPC_ID"

@@ -21,17 +21,7 @@ read -rp "Nome do Service (ex: meuapp-service): " SERVICE_NAME
 
 read -rp "Desired count (ex: 2): " DESIRED_COUNT
 
-# Subnets: aceita SUBNET_IDS ou SUBNET_A/SUBNET_B
-if [[ -n "${SUBNET_IDS:-}" ]]; then
-  SUBNETS="${SUBNET_IDS}"
-else
-  : "${SUBNET_ID_A:?SUBNET_ID_A não definido no infra.env (ou defina SUBNET_IDS)}"
-  : "${SUBNET_ID_B:?SUBNET_ID_B não definido no infra.env (ou defina SUBNET_IDS)}"
-  SUBNETS="${SUBNET_A} ${SUBNET_B}"
-fi
-
-# Montar lista com vírgula (formato exigido no --network-configuration)
-SUBNETS_CSV="$(echo "$SUBNETS" | xargs | sed 's/ /,/g')"
+SUBNETS="$SVC_SUBNET_IDS"
 
 echo "==> Região:   $AWS_REGION"
 echo "==> Cluster:  $CLUSTER_NAME"
@@ -70,7 +60,7 @@ else
     --task-definition "$TASK_DEF_ARN" \
     --launch-type FARGATE \
     --desired-count "$DESIRED_COUNT" \
-    --network-configuration "awsvpcConfiguration={subnets=[${SUBNETS_CSV}],securityGroups=[${SG_FARGATE_ID}],assignPublicIp=ENABLED}" \
+    --network-configuration "awsvpcConfiguration={subnets=[${SUBNETS}],securityGroups=[${SG_FARGATE_ID}],assignPublicIp=ENABLED}" \
     --tags key=Project,value=rio-aws key=ManagedBy,value=awscli \
     --output json >/dev/null
   echo "[OK] Service criado."

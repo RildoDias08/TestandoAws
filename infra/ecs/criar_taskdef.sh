@@ -14,11 +14,11 @@ if [[ -z "${AWS_REGION}" || "${AWS_REGION}" == "None" ]]; then
   exit 1
 fi
 
-: "${EXEC_ROLE_ARN:?EXEC_ROLE_ARN não definido (rode o 02_prereqs primeiro)}"
+: "${EXEC_ROLE_ARN:?EXEC_ROLE_ARN não definido (rode o req_fargate primeiro)}"
 
 # Defaults (você pode colocar isso no infra.env depois, se quiser)
-read -rp "Nome da task-definition (ex: meuapp-taskdef): " TASK_FAMILY
-read -rp "Nome do container (ex: ctn-meuapp): " CONTAINER_NAME
+read -rp "Nome da task-definition (ex: meuapp-taskdef): " TASK_FAMILY < /dev/tty
+read -rp "Nome do container (ex: ctn-meuapp): " CONTAINER_NAME < /dev/tty
 
 aws ecr describe-repositories \
   --query 'repositories[*].repositoryUri' \
@@ -58,6 +58,15 @@ echo
 # (Opcional) retenção de logs (ex.: 14 dias). Se não quiser, comente esta linha.
 aws logs put-retention-policy --region "$AWS_REGION" --log-group-name "$LOG_GROUP" --retention-in-days 14 >/dev/null 2>&1 || true
 
+# --- DB (RDS) ---
+read -rp "DB_HOST (endpoint do RDS, ex: meuapp.xxxx.us-east-1.rds.amazonaws.com): " DB_HOST < /dev/tty
+read -rp "DB_PORT (ex: 5432): " DB_PORT < /dev/tty
+read -rp "DB_NAME (ex: appdb): " DB_NAME < /dev/tty
+read -rp "DB_USER (ex: postgres): " DB_USER < /dev/tty
+read -rsp "DB_PASSWORD: " DB_PASSWORD < /dev/tty
+read -rsp "DB_SSL(ex: true): " DB_SSL < /dev/tty
+echo
+
 # 2) Gerar JSON da task definition
 TASKDEF_JSON="/tmp/${TASK_FAMILY}-taskdef.json"
 
@@ -78,6 +87,14 @@ cat > "$TASKDEF_JSON" <<JSON
       "name": "${CONTAINER_NAME}",
       "image": "${IMAGE_URI}",
       "essential": true,
+	"environment": [
+        { "name": "DB_HOST", "value": "${DB_HOST}" },
+        { "name": "DB_PORT", "value": "${DB_PORT}" },
+        { "name": "DB_NAME", "value": "${DB_NAME}" },
+        { "name": "DB_USER", "value": "${DB_USER}" },
+	{ "name": "DB_SSL", "value": "${DB_SSL}" },
+        { "name": "DB_PASSWORD", "value": "${DB_PASSWORD}" }
+      ],
       "portMappings": [
         {
           "containerPort": ${APP_PORT},
