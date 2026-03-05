@@ -31,22 +31,22 @@ services:
 #      timeout: 5s
 #      retries: 5
 
-  frontend:
-    build:
-      context: ./client
-    env_file:
-      - ./client/.env
-    depends_on:
-      backend:
-        condition: service_started
-    ports:
-      - "8080:80"
-    networks:
-      - frontend_net
-      - backend_net
+#  frontend:
+#    build:
+#      context: ./client
+#    env_file:
+#      - ./client/.env
+#    depends_on:
+#      backend:
+#        condition: service_started
+#    ports:
+#      - "8080:80"
+#    networks:
+#      - frontend_net
+#      - backend_net
 
 networks:
-  frontend_net:
+#  frontend_net:
   backend_net:
 
 volumes:

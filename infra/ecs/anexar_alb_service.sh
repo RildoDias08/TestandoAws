@@ -50,15 +50,14 @@ aws ecs update-service \
   --service "$SERVICE_NAME" \
   --task-definition "$TASK_DEF_ARN" \
   --load-balancers "targetGroupArn=${TG_ARN},containerName=${CONTAINER_NAME},containerPort=${APP_PORT}" \
-  --network-configuration "awsvpcConfiguration={subnets=[${SUBNETS_CSV}],securityGroups=[${SG_FARGATE_ID}],assignPublicIp=ENABLED}" \
-  --force-new-deployment \
+  --desired-count 2 --force-new-deployment \
   >/dev/null
 
 echo "[WAIT] Aguardando service ficar estável..."
 aws ecs wait services-stable \
   --region "$AWS_REGION" \
   --cluster "$CLUSTER_NAME" \
-  --services "$SERVICE_NAME"
+  --services "$SERVICE_NAME" 
 
 echo "[OK] Service atualizado e estável."
 echo
