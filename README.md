@@ -83,7 +83,6 @@ TestandoAws/
 - Informações de runtime
 - CRUD completo de tarefas
 - Paginação e filtros
-- Campo opcional "dueDate"
 
 ---
 
@@ -102,22 +101,6 @@ docker compose up --build
 3️⃣ Acessar
 
 - Frontend → http://localhost:8080
-
----
-
-🧪 Execução em modo dev (sem Docker)
-
-Backend
-
-cd api
-npm install
-npm start
-
-Frontend
-
-cd client
-npm install
-npm run dev
 
 ---
 
